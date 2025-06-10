@@ -1,22 +1,8 @@
---DECLARE
---		@BatchSize INT = 100000, --Tama駉 de los lotes que se borraran por iteracion (por defecto)
---		@TimeStamp INT = 3, --Cantidad de tiempo que se quiere dejar vigente en los logs (obligatorio)
---		@LogTreshold DECIMAL (5,2) = 70.00, --Porcentaje maximo de uso del log antes de hacer un backup (por defecto)
---		@TableNames VARCHAR(MAX) = 'BackendLog, AuditLog, TechLog, ApplicationLogs', --Nombre de la(s) tabla(s) que se quieren limpiar (obligatorio)
---		@DatabaseNames VARCHAR(MAX), --Listado de Bases de Datos que se quieren incluir (opcional)
---		@SchemaNames VARCHAR(MAX) = 'dbo, EntLib', --Listado de esquemas que se quieren incluir (opcional)
---		@ColumnTableNames VARCHAR(MAX) = '[BackendLogId, LogDate], [AuditLogId, DateTime], [LogId, Timestamp], [ApplicationLogId, ExecutionDate]', --Nombre de las columnas que se usaran. Las columnas deben ser ID y TimeStamp (obligatorio)
---		@DelayBetweenBatches INT = 5, --Segundos
---		@MaxRetries INT = 5,
---		Variables de configuraci髇 para los backups
---		@EnableAutoCleanLog BIT = 1, --Activar la limpieza de logs automatica (auto por defecto)
---		@BackupPath VARCHAR(MAX) = 'D:\Temp\'
-
 USE master
 GO
 
 CREATE OR ALTER PROCEDURE dbo.DeleteOldLogs(
-		@BatchSize INT = 100000, --Tama駉 de los lotes que se borraran por iteracion (por defecto)
+		@BatchSize INT = 100000, --Tama帽o de los lotes que se borraran por iteracion (por defecto)
 		@TimeStamp INT, --Cantidad de tiempo que se quiere dejar vigente en los logs (obligatorio)
 		@LogTreshold DECIMAL (5,2) = 70.00, --Porcentaje maximo de uso del log antes de hacer un backup (por defecto)
 		@TableNames VARCHAR(MAX), --Nombre de la(s) tabla(s) que se quieren limpiar (obligatorio)
@@ -25,7 +11,7 @@ CREATE OR ALTER PROCEDURE dbo.DeleteOldLogs(
 		@ColumnTableNames VARCHAR(MAX), --Nombre de las columnas que se usaran. Las columnas deben ser ID y TimeStamp (obligatorio)
 		@DelayBetweenBatches INT = 5, --Segundos (default 5)
 		@MaxRetries INT = 5,
-		--Variables de configuraci髇 para los backups
+		--Variables de configuraci贸n para los backups
 		@EnableAutoCleanLog BIT = 1, --Activar la limpieza de logs automatica
 		@BackupPath VARCHAR(MAX)
 )
@@ -55,7 +41,7 @@ AS BEGIN
 			@ErrorMessage VARCHAR(MAX),
 			@HAisEnabled BIT = 0,
 			@MaxDelayBetweenBatches INT  = 25,
-			@ETAHAwaitTime NCHAR(15) = TIMEFROMPARTS(0,0,30,0,0), --30 Segundos de espera para la disminuci髇 del tiempo de espera en replicas
+			@ETAHAwaitTime NCHAR(15) = TIMEFROMPARTS(0,0,30,0,0), --30 Segundos de espera para la disminuci贸n del tiempo de espera en replicas
 			@BatchesDelayTime NCHAR(15),
 			@CurrentDateTime DATE = GETDATE(),
 			@Lower VARCHAR(30),
@@ -64,7 +50,7 @@ AS BEGIN
 			@RefColId VARCHAR(50),
 			@ChildFlag BIT,
 			--Verificacion de replicas
-			@MaxReplicaETA INT = 60,  --60 segundos de umbral m醲imo
+			@MaxReplicaETA INT = 60,  --60 segundos de umbral m谩ximo
 			@send_kb FLOAT,
 			@send_kb_s FLOAT,
 			@redo_kb FLOAT,
@@ -79,7 +65,7 @@ AS BEGIN
 			@Pair VARCHAR(MAX),
 			@CommaCount INT,
 			@SpaceCount INT,
-			--Validaci髇 de informacion en las tablas
+			--Validaci贸n de informacion en las tablas
 			@MissingTables VARCHAR(MAX),
 			@MissingColumns VARCHAR(MAX),
 			--Variables para identificar la Base de datos
@@ -389,7 +375,7 @@ AS BEGIN
 
 			SET @Pair = SUBSTRING(@ColumnTableNames, @Start, @End - @Start + 1)
 
-			-- Verificar que no haya m醩 de dos columnas por par de corchetes
+			-- Verificar que no haya m谩s de dos columnas por par de corchetes
 			IF LEN(@Pair) - LEN(REPLACE(@Pair, ',', '')) <> 1
 			BEGIN
 				RAISERROR('Each bracket pair should contain exactly two columns.', 16, 1)
@@ -447,7 +433,7 @@ AS BEGIN
 
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		-- Consulta din醡ica para obtener los esquemas de la base de datos actual
+		-- Consulta din谩mica para obtener los esquemas de la base de datos actual
 		SET @SQL = '
 			INSERT INTO #DatabasesWSchemas (DatabaseName, SchemaName)
 			SELECT CATALOG_NAME, SCHEMA_NAME
@@ -569,7 +555,7 @@ AS BEGIN
 		END
 	/*
 	----------
-	Proceso de eliminaci髇 de Logs
+	Proceso de eliminaci贸n de Logs
 	----------
 	*/
 
@@ -771,7 +757,7 @@ AS BEGIN
 					SET @BatchEndId = (CASE WHEN @StartId + @BatchSize < @EndId 
 											THEN @StartId + @BatchSize 
 											ELSE @EndId END)
-						/*Extracci髇 de tablas hijas cuando se intenta borrar una tabla padre*/
+						/*Extracci贸n de tablas hijas cuando se intenta borrar una tabla padre*/
 					PRINT @SelectedDatabase+CHAR(10)+CHAR(13)+ @SelectedSchema+CHAR(10)+CHAR(13)+@SelectedTable
 
 					IF (@ChildFlag = 1)
@@ -847,7 +833,7 @@ AS BEGIN
 							ELSE
 								BEGIN
 									/*Si intenta entrar 1 vez y no encuentra tablas hijas
-									entonces se configura para que no reintente m醩 el proceso*/
+									entonces se configura para que no reintente m谩s el proceso*/
 									SET @ChildFlag = 0
 								END
 						END
