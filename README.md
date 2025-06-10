@@ -29,7 +29,7 @@ Permitir la **limpieza automatizada** de tablas de logs según una política de 
 | `@BackupPath`           | `VARCHAR(MAX)`   | Ruta donde se almacenarán los backups del log si se activa la limpieza automática. |
 
 ---
-## Consideraciones
+## 🛑 Consideraciones
 🕒 Se recomienda ejecutar este procedimiento fuera del horario de alto tráfico.
 
 💾 Realiza respaldos de tus bases de datos antes de utilizarlo en ambientes productivos.
