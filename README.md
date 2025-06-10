@@ -40,7 +40,7 @@ Tener una columna de identificador único.
 
 Tener una columna de tipo fecha/hora que se utilizará como criterio de eliminación.
 
----
+
 ---
 
 ## 💡 Ejemplo de uso
