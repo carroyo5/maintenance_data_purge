@@ -758,7 +758,7 @@ AS BEGIN
 											THEN @StartId + @BatchSize 
 											ELSE @EndId END)
 						/*Extracción de tablas hijas cuando se intenta borrar una tabla padre*/
-					PRINT @SelectedDatabase+CHAR(10)+CHAR(13)+ @SelectedSchema+CHAR(10)+CHAR(13)+@SelectedTable
+					--PRINT @SelectedDatabase+CHAR(10)+CHAR(13)+ @SelectedSchema+CHAR(10)+CHAR(13)+@SelectedTable
 
 					IF (@ChildFlag = 1)
 						BEGIN
